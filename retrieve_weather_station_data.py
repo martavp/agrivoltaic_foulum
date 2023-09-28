@@ -24,11 +24,11 @@ date = '2023-05-{}'.format(day)
 times = pd.date_range(start=date, freq='1min', periods=24*60, tz=tz)
 # how to use data_range https://pandas.pydata.org/docs/user_guide/timeseries.html#timeseries-offset-aliases
 
-G = pd.to_numeric(data[('Global_Avg', 'W.m-2')][times])
-D = pd.to_numeric(data[('Diffuse_Avg', 'W.m-2')][times])
+G_SPN1 = pd.to_numeric(data[('Global_Avg', 'W.m-2')][times]) # SPN1 measuring global
+D_SPN1 = pd.to_numeric(data[('Diffuse_Avg', 'W.m-2')][times]) # SPN2 measuring diffuse
 
-D_SPN1 = pd.to_numeric(data[('Solar_Wm2_1_Avg', 'W/m²')][times])
-G_SPN1 = pd.to_numeric(data[('Solar_Wm2_2_Avg', 'W/m²')][times])
+G = pd.to_numeric(data[('Solar_Wm2_1_Avg', 'W/m²')][times]) # pyranometer facing up
+R = pd.to_numeric(data[('Solar_Wm2_2_Avg', 'W/m²')][times]) # pyranometer facing down
 
 #%%
 plt.figure(figsize=(8, 6))
