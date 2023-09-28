@@ -1,0 +1,13 @@
+
+https://region02eu5.fusionsolar.huawei.com/pvmswebsite/assets/build/index.html#/home/list
+
+Entrar en Fussion Solar directamente a traves de internet
+
+user: aarhusuniversity
+password:hyperfarm2019
+
+Left column: select "Logger-1" then click to select both inverters and select "Export Performance data".
+Select all the variables.
+Select "5 minutes" granularity and name the task as "year_month", e.g. 2023_06
+
+One file per month needs to be downloaded.
