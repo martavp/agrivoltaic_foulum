@@ -149,7 +149,7 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 
 #%%
 # Create empty dataframe to be populated
-tz = 'CET' 
+tz = 'UTC' 
 start_date = '2022-12-01 00:00:00'
 end_date = '2023-12-31 23:55:00'
 time_index = pd.date_range(start=start_date, 
@@ -162,7 +162,7 @@ time_index_hour = pd.date_range(start=start_date,
                                 end=end_date, 
                                 freq='H',  
                                 tz=tz)
-#retrieve data from inverters
+#retrieve data from inverters, dateindex in CET/CEST (indicated by DST)
 data_path='data/inverter_monthly_datafiles/'
 clean_data = retrieve_inverter(data_path, 
                                clean_data, 
@@ -170,7 +170,7 @@ clean_data = retrieve_inverter(data_path,
                                end_date = end_date, 
                                tz='CET')
 
-#retrieve data from weather station
+#retrieve data from weather station, dataindex in UTC
 fn = 'data/weather_station_data/CR1000XSeries_2_Table2.dat'
 dic_columns = {'GHI_SPN1 (W.m-2)':('Global_Avg', 'W.m-2', 'Avg'),
                'DHI_SPN1 (W.m-2)':('Diffuse_Avg', 'W.m-2', 'Avg'),
@@ -188,7 +188,7 @@ clean_data = retrieve_weather_station(fn,
                                       dic_columns, 
                                       start_date, 
                                       end_date, 
-                                      tz='CET') 
+                                      tz='UTC') 
 
 #Data from weather station from 2023/04/18 to 2023/08/25 
 fn = 'data/weather_station_data/CR1000XSeries_Table2_old.dat'
@@ -197,7 +197,7 @@ clean_data = retrieve_weather_station(fn,
                                       dic_columns, 
                                       start_date = '2023-04-18 00:00:00', 
                                       end_date = '2023-08-25 23:55:00', 
-                                      tz = 'CET') 
+                                      tz = 'UTC') 
 
 #measuring errors in temperature sensor and relative humidity sensor
 clean_data['Ambient Temperature (Deg C)'][clean_data['Ambient Temperature (Deg C)']<-80.0]=None
@@ -214,7 +214,7 @@ clean_data = retrieve_weather_station(fn,
                                       dic_columns, 
                                       start_date, 
                                       end_date, 
-                                      tz='CET')  
+                                      tz='UTC')  
 
 #Retrieve weather station data - wind sensor from 2023/04/18 to 2023/08/25 
 fn = 'data/weather_station_data/CR1000XSeries_Table1_old.dat'
@@ -223,9 +223,9 @@ clean_data = retrieve_weather_station(fn,
                                       dic_columns, 
                                       start_date = '2023-04-18 00:00:00', 
                                       end_date = '2023-08-25 23:55:00', 
-                                      tz = 'CET') 
+                                      tz = 'UTC') 
 
-#retrieve data from second weather station
+#retrieve data from second weather station, dataindex in UTC?
 dic_columns = {'GHI_2nd station (W.m-2)':'glorad',
                'Ambient Temperature_2nd station (Deg C)':'metp'}
 fn = 'data/weather_station_6069/522945015.csv'
@@ -234,7 +234,7 @@ clean_data = retrieve_weather_station6069(fn,
                                           dic_columns, 
                                           start_date, 
                                           end_date, 
-                                          tz='CET')
+                                          tz='UTC')
 
 # Plot summary of available clean data
 clean_data=clean_data.astype(float)
