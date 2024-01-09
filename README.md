@@ -1,6 +1,6 @@
 # Agrivoltaic systems Foulum
 
-**This repository is currently private and will become public when we publish the accompanyning paper.**
+**This repository is currently private and will become public when we publish the accompanying paper.**
 
 
 This repository includes scripts to process, validate, and analyze the data collected at the Agrivoltaics demonstration site in Foulumgaard which is part of the Hyperfarm project.
