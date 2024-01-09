@@ -1,0 +1,33 @@
+
+WEATHER STATION
+
+2022/12/01 Weather station starts working and monitoring starts.
+
+2023/03/08 Temperature and reference humidity sensor stops working properly.
+
+2023/04/18 to 2023/08/25 Data in file "CR1000XSeries_Table2_old". This is where data logger changes for 1 to 5 minutes.
+
+2023/07/07 Reference solar cell in tilted system get damaged by Malthe and stop recording.
+
+2023/08/14 Reference solar cell in vertical system get damaged by Malthe and spot recording.
+
+2023/09/06 16:00 Reference solar cells in vertical system back to work.
+
+2023/10/09 Reference solar cells in tilted system start back to work.
+
+2023/10/09 Temperature and Reference Humidity sensors back to work. 
+
+
+NOTAS DE KAMRAN QUE NO ENTIENDO:
+3) Weather station stop working due to low battery for around 10 days aprox. (22/11/2022).
+4) Weather station start working from around 25/9/2023.
+¿Ha cambiado la conexión de las células de referencia?
+¿Cuándo ha movido el sensor de viento?
+
+WEATHER STATION 6069 (JEROEN'S)
+2023/01/01 First data available
+2023/06/06 to 2023/06/12 Global Horizontal Irradiation (GHI) data missing
+2023/10/29 Last date available
+
+PHOTOVOLTAIC SYSTEM AND INVERTER MONITORING
+2023/04/28 System starts working and monitoring starts.

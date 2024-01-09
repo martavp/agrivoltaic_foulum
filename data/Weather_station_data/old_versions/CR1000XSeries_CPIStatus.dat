@@ -1,7 +1,0 @@
-"TOA5","CR1000XSeries","CR1000X","29994","CR1000X.Std.06.01","CPU:CCSL023911_v1.01.CR1X","7359","CPIStatus"
-"TIMESTAMP","RECORD","BusLoad","ModuleReportCount","ActiveModules","BuffErr","RxErrMax","TxErrMax","FrameErr","ModuleInfo(1)","ModuleInfo(2)","ModuleInfo(3)","ModuleInfo(4)","ModuleInfo(5)","ModuleInfo(6)"
-"TS","RN","","","","","","","","","","","","",""
-"","","","","","","","","","","","","","",""
-"2023-05-10 06:24:33.827",6,0,1,1,0,0,0,2,"VOLT108,5147,VOLT 100,1,Active,VOLT100.Std.06.01","","","","",""
-"2023-05-10 06:25:22.212",6,1.125,1,1,0,0,0,2,"VOLT108,5147,VOLT 100,1,Active,VOLT100.Std.06.01","","","","",""
-"2023-05-10 06:30:25.381",6,0,1,1,0,0,0,2,"VOLT108,5147,VOLT 100,1,Active,VOLT100.Std.06.01","","","","",""
