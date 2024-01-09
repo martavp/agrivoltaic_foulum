@@ -1,4 +1,4 @@
-# hyperfarm
+# Agrivoltaic systems Foulum
 
 **This repository is currently private and will become public when we publish the accompanyning paper.**
 
