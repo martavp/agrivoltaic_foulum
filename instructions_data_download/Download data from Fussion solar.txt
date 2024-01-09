@@ -6,8 +6,10 @@ Entrar en Fussion Solar directamente a traves de internet
 user: aarhusuniversity
 password:hyperfarm2019
 
-Left column: select "Logger-1" then click to select both inverters and select "Export Performance data".
+Left column: select "hyperfarm/Logger-1", top menu: select "Device Managment", 
+then click to select both inverters and select "Export Performance data".
+
 Select all the variables.
-Select "5 minutes" granularity and name the task as "year_month", e.g. 2023_06
+Select "5 minutes" granularity, Select "Merge files and export" and name the task as "year_month", e.g. 2023_06
 
 One file per month needs to be downloaded.

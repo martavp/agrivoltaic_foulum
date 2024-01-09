@@ -12,3 +12,5 @@ Neighbour PakBus Address: 0
 Current Program: CCSL023911_v1.02.CR1X
 
 Data table are saved in  C:\Campbellsci\LoggerNet
+
+Connect at 12:00 am in summer (or 11:00 am in winter)

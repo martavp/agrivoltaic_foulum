@@ -1,4 +1,3 @@
-
 WEATHER STATION
 
 2022/12/01 Weather station starts working and monitoring starts.
@@ -16,7 +15,6 @@ WEATHER STATION
 2023/10/09 Reference solar cells in tilted system start back to work.
 
 2023/10/09 Temperature and Reference Humidity sensors back to work. 
-
 
 NOTAS DE KAMRAN QUE NO ENTIENDO:
 3) Weather station stop working due to low battery for around 10 days aprox. (22/11/2022).
