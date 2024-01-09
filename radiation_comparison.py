@@ -15,12 +15,12 @@ start_date2 = '2023-06-01 00:00:00'
 start_date3 = '2023-09-01 00:00:00' 
 end_date = '2023-11-30 23:55:00'
 
-tz = 'Europe/Oslo' 
+tz = 'UTC' 
 
 data=pd.read_csv('resources/clean_data.csv',
                  index_col=0)
 
-data.index = pd.to_datetime(data.index, utc=True) #.tz_localize(tz=tz)
+data.index = pd.to_datetime(data.index, utc=True) 
 
 time_index = pd.date_range(start=start_date, 
                            end=end_date, 
