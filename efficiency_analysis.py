@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec 
 
 
-start_date2 = '2023-06-01 00:00:00' 
+start_date2 = '2023-06-11 00:00:00' 
 start_date3 = '2023-09-12 00:00:00'
 end_date = '2023-11-30 23:55:00'
 
@@ -74,8 +74,10 @@ ax0.plot(data['Efficiency INV-2-VBF'][time_index_day],
          marker='o',
          markersize=5,
          linewidth=0,
-         label='Efficiency INV-1-TBF')
+         label='Efficiency INV-2-VBF')
 ax0.set_ylabel('Efficiency')
+ax0.grid('--')
+ax0.set_ylim([0, 0.25])
 ax0.legend()
 
 sources = [ 'INV-1-TBF Total input power (kW)',
@@ -134,10 +136,11 @@ for i, source in enumerate(sources_r[2:5]):
     
 ax1.set_ylabel('DC Power (kW)')    
 ax3.set_ylabel('DC Power (kW)') 
-ax2.set_ylabel('POA irradiance (W.m-2') 
-ax4.set_ylabel('POA irradiance (W.m-2') 
+ax2.set_ylabel('POA irradiance (W.m-2)') 
+ax4.set_ylabel('POA irradiance (W.m-2)') 
 ax5.set_ylabel('DC Power (kW)')    
 ax6.set_ylabel('DC Power (kW)') 
-ax7.set_ylabel('POA irradiance (W.m-2') 
-ax8.set_ylabel('POA irradiance (W.m-2')
+ax7.set_ylabel('POA irradiance (W.m-2)') 
+ax8.set_ylabel('POA irradiance (W.m-2)')
+
 plt.savefig('Figures/Efficiency_analysis.jpg', dpi=300, bbox_inches='tight')

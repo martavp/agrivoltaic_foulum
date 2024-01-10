@@ -109,4 +109,6 @@ for i,source in enumerate(sources):
     ax3.legend()
     ax2.set_ylabel('W.m-2')
     ax3.set_ylabel('W.m-2')
+    ax2.grid('--')
+    ax3.grid('--')
 plt.savefig('Figures/GHI_analysis.jpg', dpi=300, bbox_inches='tight')
