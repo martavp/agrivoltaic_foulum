@@ -41,6 +41,7 @@ irradiance_tilted = (data['Reference Cell Tilted facing up (W.m-2)'] +
 
 irradiance_vertical = (data['Reference Cell Vertical East (W.m-2)']
                        + data['Reference Cell Vertical West (W.m-2)'])
+
 #irradiance_vertical.index += pd.DateOffset(hours=1)
 data['Efficiency INV-1-TBF'] = (1000/area)* data['INV-1-TBF Total input power (kW)'] / irradiance_tilted
 
@@ -142,5 +143,34 @@ ax5.set_ylabel('DC Power (kW)')
 ax6.set_ylabel('DC Power (kW)') 
 ax7.set_ylabel('POA irradiance (W.m-2)') 
 ax8.set_ylabel('POA irradiance (W.m-2)')
-
+#%%
 plt.savefig('Figures/Efficiency_analysis.jpg', dpi=300, bbox_inches='tight')
+
+plt.figure(figsize=(8, 6))
+gs1 = gridspec.GridSpec(1, 1)
+ax0 = plt.subplot(gs1[0,0])
+start_date4 = '2023-06-11 07:00:00' 
+start_date5 = '2023-06-11 14:30:00' 
+time_index_halfday = pd.date_range(start=start_date4, 
+                           periods=10*1*12, 
+                           freq='5min',
+                           tz=tz)
+time_index_halfday2 = pd.date_range(start=start_date5, 
+                           periods=5*1*12, 
+                           freq='5min',
+                           tz=tz)
+ax0.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_halfday],  
+            data['Efficiency INV-1-TBF'][time_index_halfday],  
+           color='dodgerblue',
+           label='Efficiency INV-1-TBF')
+ax0.scatter(data['Reference Cell Vertical West (W.m-2)'][time_index_halfday2],  
+            data['Efficiency INV-2-VBF'][time_index_halfday2],  
+           color='firebrick',
+           label='Efficiency INV-2-VBF')
+
+ax0.set_ylabel('Efficiency')
+ax0.set_xlabel('Plany of Array (POA) irradiance')
+ax0.grid('--')
+ax0.set_ylim([0.15, 0.20])
+ax0.legend()
+plt.savefig('Figures/Efficiency_analysis2.jpg', dpi=300, bbox_inches='tight')
