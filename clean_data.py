@@ -7,6 +7,7 @@ stores it in the folder 'resources'.
 """
 
 import pandas as pd
+import numpy as np
 import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -98,7 +99,7 @@ def retrieve_weather_station(fn, clean_dataframe, dic_columns, start_date, end_d
     data = data[~data.index.duplicated()]
     
     for key, value in dic_columns.items():
-        clean_data.loc[time_index,key] = data[value].reindex(time_index) 
+        clean_data.loc[time_index,key] = data[value].reindex(time_index, fill_value=np.nan) 
         
     clean_data.to_csv('resources/clean_data.csv')
     return clean_data
@@ -141,8 +142,6 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 
     clean_data.to_csv('resources/clean_data.csv')
     return clean_data
-
-
 
 
 
@@ -199,7 +198,40 @@ clean_data = retrieve_weather_station(fn,
                                       end_date = '2023-08-25 23:55:00', 
                                       tz = 'UTC') 
 
-#measuring errors in temperature sensor and relative humidity sensor
+# reference cell facing up were not properly working (broken wires)
+# from 18/05/2023 to 06/09/2023 (Kamran says 26/01/2023)
+time_index_tbc = pd.date_range(start='2023-05-18 00:00:00', 
+                                end='2023-09-06 00:00:00', 
+                                freq='5min',  
+                                tz=tz)
+clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
+
+
+# reference cell in vertical setup were not properly working (broken wire)
+# from 14/08/2023 to 06/09/2023
+time_index_tbc = pd.date_range(start='2023-08-14 00:00:00', 
+                                end='2023-09-06 00:00:00', 
+                                freq='5min',  
+                                tz=tz)
+clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]=np.nan
+clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]=np.nan
+
+#%%
+#when vertical reference cells were connected on 2023/10/09 the input where
+#swapt between vertical and tilted
+time_index_tbc = pd.date_range(start='2023-10-09 00:00:00', 
+                                end=end_date, 
+                                freq='5min',  
+                                tz=tz)
+save_a = clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc].copy()
+save_b = clean_data['Reference Cell Tilted facing down (W.m-2)'][time_index_tbc].copy()
+clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc] = clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]
+clean_data['Reference Cell Tilted facing down (W.m-2)'][time_index_tbc] = clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]
+
+clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc] = save_a[time_index_tbc]
+clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc] = save_b[time_index_tbc]
+
+#correct measuring errors in temperature sensor and relative humidity sensor
 clean_data['Ambient Temperature (Deg C)'][clean_data['Ambient Temperature (Deg C)']<-80.0]=None
 clean_data['Relative Humidity (%)'][clean_data['Relative Humidity (%)']==-100.0]=None
 
