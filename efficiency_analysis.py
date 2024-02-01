@@ -36,10 +36,11 @@ time_index_day_winter = pd.date_range(start=start_date3,
                            freq='5min',
                            tz=tz)
 area = 80*2.280*1.134 #80 PV panels per inverter
+bifaciality=0.8
 irradiance_tilted = (data['Reference Cell Tilted facing up (W.m-2)'] +
-                     data['Reference Cell Tilted facing down (W.m-2)'])
+                     bifaciality*data['Reference Cell Tilted facing down (W.m-2)'])
 
-irradiance_vertical = (data['Reference Cell Vertical East (W.m-2)']
+irradiance_vertical = (bifaciality*data['Reference Cell Vertical East (W.m-2)']
                        + data['Reference Cell Vertical West (W.m-2)'])
 
 #irradiance_vertical.index += pd.DateOffset(hours=1)
@@ -143,9 +144,9 @@ ax5.set_ylabel('DC Power (kW)')
 ax6.set_ylabel('DC Power (kW)') 
 ax7.set_ylabel('POA irradiance (W.m-2)') 
 ax8.set_ylabel('POA irradiance (W.m-2)')
-#%%
-plt.savefig('Figures/Efficiency_analysis.jpg', dpi=300, bbox_inches='tight')
 
+plt.savefig('Figures/Efficiency_analysis.jpg', dpi=300, bbox_inches='tight')
+#%%
 plt.figure(figsize=(8, 6))
 gs1 = gridspec.GridSpec(1, 1)
 ax0 = plt.subplot(gs1[0,0])
