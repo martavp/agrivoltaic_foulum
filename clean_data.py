@@ -257,9 +257,25 @@ clean_data = retrieve_weather_station(fn,
                                       end_date = '2023-08-25 23:55:00', 
                                       tz = 'UTC') 
 
+# Before 06/09/2023 the wind sensor was incorrectly monted, on that date,
+# it was rotated 180 degrees
+time_index_tbc = pd.date_range(start='2022-12-01 00:00:00',
+                                end='2023-09-07 00:00:00',
+                                freq='5min',  
+                                tz=tz)
+clean_data['wind direction (deg)'][time_index_tbc] += 180
+
+
 #retrieve data from second weather station, dataindex in UTC?
 dic_columns = {'GHI_2nd station (W.m-2)':'glorad',
-               'Ambient Temperature_2nd station (Deg C)':'metp'}
+               'Ambient Temperature_2nd station (Deg C)':'metp',
+               'wind velocity_2nd station 2m height (m.s-1)': 'wv2', 
+               'wind direction_2nd station 2m height (deg)':'wd2',
+               'wind velocity_2nd station 10m height (m.s-1)': 'meanwv', 
+               'wind direction_2nd station 10m height (deg)':'meanwd'
+            
+               }
+
 fn = 'data/weather_station_6069/522945015.csv'
 clean_data = retrieve_weather_station6069(fn, 
                                           clean_data, 
