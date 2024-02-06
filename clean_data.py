@@ -264,7 +264,7 @@ time_index_tbc = pd.date_range(start='2022-12-01 00:00:00',
                                 freq='5min',  
                                 tz=tz)
 clean_data['wind direction (deg)'][time_index_tbc] += 180
-
+clean_data['wind direction (deg)'][clean_data['wind direction (deg)']>360] -=360
 
 #retrieve data from second weather station, dataindex in UTC?
 dic_columns = {'GHI_2nd station (W.m-2)':'glorad',
