@@ -128,9 +128,6 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
     data.index = pd.to_datetime(data.index).tz_localize(tz=tz, 
                                                         ambiguous='NaT', #'infer',
                                                         nonexistent='shift_forward')
-
-    #remove duplicated value due to Daylight Saving Time (DST)
-    #data = data[~data.index.duplicated()]
     
     #index to read hourly values from second weather station
     time_index_hour = pd.date_range(start=start_date, 
