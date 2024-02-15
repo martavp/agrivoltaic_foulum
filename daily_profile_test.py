@@ -15,7 +15,7 @@ data=pd.read_csv('resources/clean_data.csv',
 data.index = pd.to_datetime(data.index, utc=True) 
 
 start_date = '2023-05-01 00:00:00'
-end_date = '2023-11-01 00:00:00'
+end_date = '2024-02-14 00:00:00' #'2023-11-01 00:00:00'
 tz='UTC' 
 time_index_day = pd.date_range(start=start_date, 
                                   end=end_date, 

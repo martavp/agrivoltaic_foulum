@@ -81,22 +81,23 @@ def retrieve_weather_station(fn, clean_dataframe, dic_columns, start_date, end_d
                                freq='5min',  
                                tz=tz)
     data = pd.read_csv(fn, 
-                   skiprows=1,
-                   header=[0,1,2],
-                   sep=',',
-                   index_col=0, 
-                   low_memory=False) 
+                       skiprows=1,
+                       header=[0,1,2],
+                       sep=',',
+                       index_col=0, 
+                       low_memory=False) 
 
     data.index = pd.to_datetime(data.index).tz_localize(tz=tz, 
-                                                    ambiguous='NaT', #'infer',
-                                                    nonexistent='shift_forward')
+                                                        ambiguous='NaT', #'infer',
+                                                        nonexistent='shift_forward')
 
     # merge indices into a single index and convert values to float
     data.columns = data.columns.to_flat_index()
     data=data.astype(float)
 
-    # remove duplicated value due to Daylight Saving Time to enable reindex
-    data = data[~data.index.duplicated()]
+    # remove duplicated values to enable reindex
+    #data = data[~data.index.duplicated()]
+    data.drop_duplicates(keep='last', inplace=True)
     
     for key, value in dic_columns.items():
         clean_data.loc[time_index,key] = data[value].reindex(time_index, fill_value=np.nan) 
@@ -129,7 +130,7 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
                                                         nonexistent='shift_forward')
 
     #remove duplicated value due to Daylight Saving Time (DST)
-    data = data[~data.index.duplicated()]
+    #data = data[~data.index.duplicated()]
     
     #index to read hourly values from second weather station
     time_index_hour = pd.date_range(start=start_date, 
@@ -146,11 +147,11 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 
 
 
-#%%
+
 # Create empty dataframe to be populated
 tz = 'UTC' 
 start_date = '2022-12-01 00:00:00'
-end_date = '2023-12-31 23:55:00'
+end_date = '2024-03-01 23:55:00'
 time_index = pd.date_range(start=start_date, 
                                end=end_date, 
                                freq='5min',  
@@ -170,7 +171,7 @@ clean_data = retrieve_inverter(data_path,
                                tz='CET')
 
 #retrieve data from weather station, dataindex in UTC
-fn = 'data/weather_station_data/CR1000XSeries_2_Table2.dat'
+fn = 'data/weather_station_data/20241002/CR1000XSeries_2_Table2.dat'
 dic_columns = {'GHI_SPN1 (W.m-2)':('Global_Avg', 'W.m-2', 'Avg'),
                'DHI_SPN1 (W.m-2)':('Diffuse_Avg', 'W.m-2', 'Avg'),
                'GHI (W.m-2)':('Solar_Wm2_2_Avg', 'W/m²', 'Avg'),
@@ -189,7 +190,7 @@ clean_data = retrieve_weather_station(fn,
                                       end_date, 
                                       tz='UTC') 
 
-#Data from weather station from 2023/04/18 to 2023/08/25 
+# #Data from weather station from 2023/04/18 to 2023/08/25 
 fn = 'data/weather_station_data/CR1000XSeries_Table2_old.dat'
 clean_data = retrieve_weather_station(fn, 
                                       clean_data, 
@@ -198,8 +199,10 @@ clean_data = retrieve_weather_station(fn,
                                       end_date = '2023-08-25 23:55:00', 
                                       tz = 'UTC') 
 
+
 # reference cell facing up were not properly working (broken wires)
-# from 18/05/2023 to 06/09/2023 (Kamran says 26/01/2023)
+# from 18/05/2023 to 06/09/2023 (Kamran says 26/01/2023 and the first one broken
+# was on the vertical)
 time_index_tbc = pd.date_range(start='2023-05-18 00:00:00', 
                                 end='2023-09-06 00:00:00', 
                                 freq='5min',  
@@ -209,6 +212,7 @@ clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
 
 # reference cell in vertical setup were not properly working (broken wire)
 # from 14/08/2023 to 06/09/2023
+
 time_index_tbc = pd.date_range(start='2023-08-14 00:00:00', 
                                 end='2023-09-06 00:00:00', 
                                 freq='5min',  
@@ -216,9 +220,10 @@ time_index_tbc = pd.date_range(start='2023-08-14 00:00:00',
 clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]=np.nan
 clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]=np.nan
 
-#%%
+
 #when vertical reference cells were connected on 2023/10/09 the input where
 #swapt between vertical and tilted
+
 time_index_tbc = pd.date_range(start='2023-10-09 00:00:00', 
                                 end=end_date, 
                                 freq='5min',  
@@ -237,7 +242,7 @@ clean_data['Relative Humidity (%)'][clean_data['Relative Humidity (%)']==-100.0]
 
 
 #Retrieve weather station data - wind sensor
-fn = 'data/weather_station_data/CR1000XSeries_2_Table1.dat'
+fn = 'data/weather_station_data/20241002/CR1000XSeries_2_Table1.dat'
 dic_columns = {'wind velocity (m.s-1)':('WS_ms_S_WVT', 'meters/second', 'WVc'),
                'wind direction (deg)':('WindDir_D1_WVT', 'Deg', 'WVc')}
 
