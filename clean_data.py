@@ -163,7 +163,7 @@ time_index_hour = pd.date_range(start=start_date,
 data_path='data/inverter_monthly_datafiles/'
 clean_data = retrieve_inverter(data_path, 
                                clean_data, 
-                               start_date = '2023-04-01 00:00:00', 
+                               start_date = '2023-04-01 00:00:00', #'2024-02-01 00:00:00'
                                end_date = end_date, 
                                tz='CET')
 
@@ -209,7 +209,6 @@ clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
 
 # reference cell in vertical setup were not properly working (broken wire)
 # from 14/08/2023 to 06/09/2023
-
 time_index_tbc = pd.date_range(start='2023-08-14 00:00:00', 
                                 end='2023-09-06 00:00:00', 
                                 freq='5min',  
@@ -220,7 +219,6 @@ clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]=np.nan
 
 #when vertical reference cells were connected on 2023/10/09 the input where
 #swapt between vertical and tilted
-
 time_index_tbc = pd.date_range(start='2023-10-09 00:00:00', 
                                 end=end_date, 
                                 freq='5min',  
@@ -233,6 +231,16 @@ clean_data['Reference Cell Tilted facing down (W.m-2)'][time_index_tbc] = clean_
 clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc] = save_a[time_index_tbc]
 clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc] = save_b[time_index_tbc]
 
+#Add one hour shift to weather station data from 14/07/2023
+time_index_tbc = pd.date_range(start='2023-07-04 00:00:00', 
+                                end= '2024-03-01 21:55:00', 
+                                freq='5min',  
+                                tz=tz)
+
+clean_data.loc[time_index_tbc,[i for i in dic_columns.keys()]] = clean_data.loc[time_index_tbc + pd.DateOffset(hours=2),[i for i in dic_columns.keys()]].values
+
+
+
 #correct measuring errors in temperature sensor and relative humidity sensor
 clean_data['Ambient Temperature (Deg C)'][clean_data['Ambient Temperature (Deg C)']<-80.0]=None
 clean_data['Relative Humidity (%)'][clean_data['Relative Humidity (%)']==-100.0]=None
@@ -241,7 +249,8 @@ clean_data['Relative Humidity (%)'][clean_data['Relative Humidity (%)']==-100.0]
 #Retrieve weather station data - wind sensor
 fn = 'data/weather_station_data/20241002/CR1000XSeries_2_Table1.dat'
 dic_columns = {'wind velocity (m.s-1)':('WS_ms_S_WVT', 'meters/second', 'WVc'),
-               'wind direction (deg)':('WindDir_D1_WVT', 'Deg', 'WVc')}
+               'wind direction (deg)':('WindDir_D1_WVT', 'Deg', 'WVc'),
+               'wind gust (m.s-1)': ('Gust3s_Max', 'Unnamed: 4_level_1', 'Max')}
 
 clean_data = retrieve_weather_station(fn, 
                                       clean_data, 

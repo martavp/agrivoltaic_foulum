@@ -85,7 +85,10 @@ for day in time_index_day:
     ax2.set_ylim([0, 1100])
     ax5.set_ylim([0, 40])
     ax6.set_ylim([0, 1100])
-    
+    ax1.set_xlim([time_index[0], time_index[-1]])
+    ax2.set_xlim([time_index[0], time_index[-1]])
+    ax5.set_xlim([time_index[0], time_index[-1]])
+    ax6.set_xlim([time_index[0], time_index[-1]])
     plt.savefig('Figures/daily_profiles_test/test_{}_{}_{}.jpg'.format(day.year, str(day.month).zfill(2), str(day.day).zfill(2)), 
                 dpi=100, bbox_inches='tight')
 
