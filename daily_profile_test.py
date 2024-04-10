@@ -15,7 +15,7 @@ data=pd.read_csv('resources/clean_data.csv',
 data.index = pd.to_datetime(data.index, utc=True) 
 
 start_date = '2023-05-01 00:00:00'
-end_date = '2024-02-14 00:00:00' #'2023-11-01 00:00:00'
+end_date =  '2024-04-10 00:00:00'
 tz='UTC' 
 time_index_day = pd.date_range(start=start_date, 
                                   end=end_date, 
@@ -42,24 +42,24 @@ for day in time_index_day:
     sources = [ 'INV-1-TBF Total input power (kW)',
               'INV-2-VBF Total input power (kW)']
 
-    sources_r = ['Reference Cell Tilted facing up (W.m-2)',
-               'Reference Cell Tilted facing down (W.m-2)',
-               'GHI (W.m-2)',
-               'Reference Cell Vertical East (W.m-2)',
-               'Reference Cell Vertical West (W.m-2)']
+    sources_r = ['GHI (W.m-2)',
+                 'Reference Cell Tilted facing up (W.m-2)',
+                 'Reference Cell Tilted facing down (W.m-2)',
+                 'Reference Cell Vertical East (W.m-2)',
+                 'Reference Cell Vertical West (W.m-2)']
     for i, source in enumerate(sources[0:1]):
         ax1.plot(data[source][time_index], 
                  alpha=0.5,
                  color=colors[i],
                  label=source)
-        ax1.legend()
+        ax1.legend(fontsize=14, bbox_to_anchor=(1.1, 0.4))
         
 
     for i, source in enumerate(sources_r[0:3]):
         ax2.plot(data[source][time_index], 
                  alpha=0.5,
                  label=source)
-        ax2.legend() 
+        ax2.legend(fontsize=14, bbox_to_anchor=(1.1, 0.3))
 
 
     for i, source in enumerate(sources[1:2]):
@@ -67,14 +67,14 @@ for day in time_index_day:
                   alpha=0.5,
                   color=colors[i],
                   label=source)
-        ax5.legend()
+        ax5.legend(fontsize=14, bbox_to_anchor=(1.1, 0.4))
         
 
-    for i, source in enumerate(sources_r[2:5]):
+    for i, source in enumerate(sources_r[0:1]+sources_r[3:5]):
         ax6.plot(data[source][time_index], 
                   alpha=0.5,
                   label=source)
-        ax6.legend() 
+        ax6.legend(fontsize=14, bbox_to_anchor=(1.1, 0.3)) 
 
         
     ax1.set_ylabel('DC Power (kW)')    
