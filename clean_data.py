@@ -148,7 +148,7 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 # Create empty dataframe to be populated
 tz = 'UTC' 
 start_date = '2022-12-01 00:00:00'
-end_date = '2024-03-01 23:55:00'
+end_date = '2024-05-01 23:55:00'
 time_index = pd.date_range(start=start_date, 
                                end=end_date, 
                                freq='5min',  
@@ -168,7 +168,7 @@ clean_data = retrieve_inverter(data_path,
                                tz='CET')
 
 #retrieve data from weather station, dataindex in UTC
-fn = 'data/weather_station_data/20241002/CR1000XSeries_2_Table2.dat'
+fn = 'data/weather_station_data/CR1000XSeries_2_Table2.dat'
 dic_columns = {'GHI_SPN1 (W.m-2)':('Global_Avg', 'W.m-2', 'Avg'),
                'DHI_SPN1 (W.m-2)':('Diffuse_Avg', 'W.m-2', 'Avg'),
                'GHI (W.m-2)':('Solar_Wm2_2_Avg', 'W/m²', 'Avg'),
@@ -198,9 +198,13 @@ clean_data = retrieve_weather_station(fn,
 
 
 # reference cell facing up were not properly working (broken wires)
-# from 18/05/2023 to 06/09/2023 (Kamran says 26/01/2023 and the first one broken
-# was on the vertical)
+# from 18/05/2023 to 19/05/2023 and from 15/06/2023 to 06/09/2023 
 time_index_tbc = pd.date_range(start='2023-05-18 00:00:00', 
+                                end='2023-05-19 00:00:00', 
+                                freq='5min',  
+                                tz=tz)
+clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
+time_index_tbc = pd.date_range(start='2023-06-15 00:00:00', 
                                 end='2023-09-06 00:00:00', 
                                 freq='5min',  
                                 tz=tz)
@@ -208,18 +212,18 @@ clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
 
 
 # reference cell in vertical setup were not properly working (broken wire)
-# from 14/08/2023 to 06/09/2023
+# from 14/08/2023 to 07/09/2023 
 time_index_tbc = pd.date_range(start='2023-08-14 00:00:00', 
-                                end='2023-09-06 00:00:00', 
+                                end='2023-09-07 00:00:00', 
                                 freq='5min',  
                                 tz=tz)
 clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]=np.nan
 clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]=np.nan
 
 
-#when vertical reference cells were connected on 2023/10/09 the input where
+#when vertical reference cells were connected on 2023/09/07 the input where
 #swapt between vertical and tilted
-time_index_tbc = pd.date_range(start='2023-10-09 00:00:00', 
+time_index_tbc = pd.date_range(start='2023-09-07 00:00:00', 
                                 end=end_date, 
                                 freq='5min',  
                                 tz=tz)
@@ -227,15 +231,14 @@ save_a = clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc].c
 save_b = clean_data['Reference Cell Tilted facing down (W.m-2)'][time_index_tbc].copy()
 clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc] = clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]
 clean_data['Reference Cell Tilted facing down (W.m-2)'][time_index_tbc] = clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]
-
 clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc] = save_a[time_index_tbc]
 clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc] = save_b[time_index_tbc]
 
-#Add one hour shift to weather station data from 14/07/2023
-time_index_tbc = pd.date_range(start='2023-07-04 00:00:00', 
-                                end= '2024-03-01 21:55:00', 
-                                freq='5min',  
-                                tz=tz)
+#Add 2-hour shift to weather station data from 14/07/2023 
+time_index_tbc = pd.date_range(start ='2023-07-04 00:00:00', 
+                                end = end_date[:-8]+'21:55:00',
+                                freq ='5min',  
+                                tz = tz)
 
 clean_data.loc[time_index_tbc,[i for i in dic_columns.keys()]] = clean_data.loc[time_index_tbc + pd.DateOffset(hours=2),[i for i in dic_columns.keys()]].values
 
@@ -247,7 +250,7 @@ clean_data['Relative Humidity (%)'][clean_data['Relative Humidity (%)']==-100.0]
 
 
 #Retrieve weather station data - wind sensor
-fn = 'data/weather_station_data/20241002/CR1000XSeries_2_Table1.dat'
+fn = 'data/weather_station_data/CR1000XSeries_2_Table1.dat'
 dic_columns = {'wind velocity (m.s-1)':('WS_ms_S_WVT', 'meters/second', 'WVc'),
                'wind direction (deg)':('WindDir_D1_WVT', 'Deg', 'WVc'),
                'wind gust (m.s-1)': ('Gust3s_Max', 'Unnamed: 4_level_1', 'Max')}
