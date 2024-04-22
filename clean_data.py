@@ -62,6 +62,9 @@ def retrieve_inverter(data_path, clean_dataframe, start_date, end_date, tz):
         clean_data.loc[inv2.index,['VBF PV2 input voltage (V)']] = inv2['PV2 input voltage(V)']
         clean_data.loc[inv2.index,['VBF PV3 input voltage (V)']] = inv2['PV3 input voltage(V)']
         clean_data.loc[inv2.index,['VBF PV4 input voltage (V)']] = inv2['PV4 input voltage(V)']
+        
+        clean_data.loc[inv1.index,['TBF inverter status']] = inv1['Inverter status']
+        clean_data.loc[inv2.index,['VBF inverter status']] = inv2['Inverter status']
     
     clean_data.to_csv('resources/clean_data.csv')
     return clean_data
@@ -180,6 +183,7 @@ dic_columns = {'GHI_SPN1 (W.m-2)':('Global_Avg', 'W.m-2', 'Avg'),
                'Reference Cell Tilted facing down (W.m-2)':('CS325DM_Analog1_2_Avg', 'W/m²', 'Avg'),
                'Reference Cell Vertical East (W.m-2)':('CS325DM_Analog1_3_Avg', 'W/m²', 'Avg'),
                'Reference Cell Vertical West (W.m-2)':('CS325DM_Analog1_4_Avg', 'W/m²', 'Avg')} 
+
 clean_data = retrieve_weather_station(fn, 
                                       clean_data, 
                                       dic_columns, 
@@ -299,10 +303,12 @@ clean_data = retrieve_weather_station6069(fn,
                                           tz='UTC')
 
 # Plot summary of available clean data
-clean_data=clean_data.astype(float)
+cols = [i for i in clean_data.columns if i not in ['TBF inverter status', 'VBF inverter status']]
+clean_data_plot=clean_data[cols]
+clean_data_plot=clean_data_plot.astype(float)
 plt.subplots(figsize=(20,15))
-ax = sns.heatmap(clean_data.loc[time_index_hour].abs()/clean_data.loc[time_index_hour].abs().max(), 
-                 cmap="plasma", mask=clean_data.loc[time_index_hour].isnull())
+ax = sns.heatmap(clean_data_plot.loc[time_index_hour].abs()/clean_data_plot.loc[time_index_hour].abs().max(), 
+                 cmap="plasma", mask=clean_data_plot.loc[time_index_hour].isnull())
 ticklabels = [time_index_hour[int(tick)].strftime('%Y-%m-%d') for tick in ax.get_yticks()]
 ax.set_yticklabels(ticklabels);
 plt.savefig('Figures/summary_clean_data.jpg', dpi=300, bbox_inches='tight')
