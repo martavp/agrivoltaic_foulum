@@ -565,3 +565,4 @@ ax3.text(0.05, 0.95, 'd)',
 plt.savefig('Figures/figure_paper.jpg', 
                 dpi=100, bbox_inches='tight')
     
+dc_power_v_m.sum()/dc_power_t_m.sum()
