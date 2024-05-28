@@ -8,7 +8,7 @@ Calculate efficiency for both systems
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec 
-date ='2023-06-11 '
+date ='2023-05-12 '
 start_date = date +'00:00:00' #day to be ploted
 tz = 'UCT' 
 start_t = date + '05:30:00' 
@@ -177,14 +177,15 @@ for i in range(1,5):
                 marker='o',
                 color='pink',
                 alpha=0.5,
-                label='row {}'.format(str(i)))
+                label='tilted row {}'.format(str(i)))
     
     ax0.scatter(data['VBF PV{} input current (A)'.format(str(i))][time_index_t2],  
                 data['VBF PV{} input voltage (V)'.format(str(i))][time_index_t2],  
                 color='green',
                 marker='x',
                 alpha=0.5,
-                label='row {}'.format(str(i)))
+                label='vertical row {}'.format(str(i)))
 ax0.set_ylabel('voltage (V)')
 ax0.set_xlabel('current (A)')
+ax0.legend(fontsize=14, bbox_to_anchor=(1.4, 0.4))
 plt.savefig('Figures/voltage_current_{}.jpg'.format(date), dpi=300, bbox_inches='tight')

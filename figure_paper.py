@@ -120,6 +120,7 @@ def calculate_irradiance_bifacial(tilt,
 
 plt.figure(figsize=(16, 12))
 gs1 = gridspec.GridSpec(2, 2)
+gs1.update(wspace=0.21, hspace=0.25)
 ax0 = plt.subplot(gs1[0,0]) # daily generation
 ax1 = plt.subplot(gs1[0,1]) # monthly generation
 ax2 = plt.subplot(gs1[1,0]) # daily generation per string
@@ -164,7 +165,7 @@ ax0.set_xlim([time_index[24], time_index[264]])
 plt.setp(ax0.get_xticklabels(), ha="right", rotation=45)
 ax0.grid('--')
 ax0.text(0.05, 0.95, 'a)', 
-         fontsize=20,
+         fontsize=22,
          horizontalalignment='center',
          verticalalignment='center', 
          transform=ax0.transAxes)
@@ -195,13 +196,7 @@ ax1.bar(dc_energy_v_m['index']+0.3,
         label='vertical measured')
 ax1.yaxis.grid('--')
 ax1.set_ylim([0,9])
-ax1.legend(fontsize=14, bbox_to_anchor=(1.01, 0.3))
-
-ax2.text(0.05, 0.95, 'c)', 
-         fontsize=20,
-         horizontalalignment='center',
-         verticalalignment='center', 
-         transform=ax2.transAxes)
+ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,6 +314,7 @@ effective_irrad_bifi_v=calculate_irradiance_bifacial(tilt_v ,
                                                       pvrow_width_v, 
                                                       albedo, 
                                                       gcr_v)
+
 # effective_irrad_bifi_v= calculate_irradiance_poa_bifacial(tilt_v,
 #                                                           orientation_v,
 #                                                           bifaciality,                                     
@@ -480,11 +476,11 @@ ax1.set_xticklabels(['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
 ax1.set_ylabel('DC energy (MWh)')
 
 ax1.text(0.05, 0.95, 'b)', 
-         fontsize=20,
+         fontsize=22,
          horizontalalignment='center',
          verticalalignment='center', 
          transform=ax1.transAxes)
-ax1.legend(fontsize=14, bbox_to_anchor=(1.01, 0.3))
+ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 #sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
 #inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208__208V_'] # inverter ABB-MICRO-0.25
 
@@ -527,6 +523,7 @@ ax01.plot(time_index_day,
                   color='dimgray',
                   alpha=0.7)
 ax01.set_ylim([2500,6000])
+ax01.set_yticks([])
 ax0.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 
 
@@ -553,16 +550,70 @@ ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 ax3.set_xlim([time_index[24], time_index[264]])
 plt.setp(ax3.get_xticklabels(), ha="right", rotation=45)
 ax3.grid('--')
-ax3.legend(fontsize=14, bbox_to_anchor=(1.01, 0.3))
+ax3.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 
  
 ax3.text(0.05, 0.95, 'd)', 
-         fontsize=20,
+         fontsize=22,
          horizontalalignment='center',
          verticalalignment='center', 
          transform=ax3.transAxes)
 
-plt.savefig('Figures/figure_paper.jpg', 
-                dpi=100, bbox_inches='tight')
+
     
 dc_power_v_m.sum()/dc_power_t_m.sum()
+
+"""
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Efficiency calculation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+"""
+ax2.text(0.05, 0.95, 'c)', 
+         fontsize=22,
+         horizontalalignment='center',
+         verticalalignment='center', 
+         transform=ax2.transAxes)
+
+tz = 'UCT' 
+date = day[0:11]
+start_t = date + '14:00:00' 
+end_t = date + '16:00:00' 
+time_index_t = pd.date_range(start=start_t, 
+                               end=end_t, 
+                               freq='5min',  
+                               tz=tz)
+
+area = 80*2.280*1.134 #80 PV panels per inverter
+bifaciality=0.8
+
+irradiance_tilted = (data['Reference Cell Tilted facing up (W.m-2)'] +
+                     bifaciality*data['Reference Cell Tilted facing down (W.m-2)'])
+
+irradiance_vertical = (bifaciality*data['Reference Cell Vertical East (W.m-2)']
+                       + data['Reference Cell Vertical West (W.m-2)'])
+
+data['Efficiency INV-1-TBF'] = (1000/area)* data['INV-1-TBF Total input power (kW)'] / irradiance_tilted
+
+data['Efficiency INV-2-VBF'] = (1000/area)* data['INV-2-VBF Total input power (kW)'] / irradiance_vertical
+
+
+
+ax2.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_t],  
+            data['Efficiency INV-1-TBF'][time_index_t],  
+            color=color_t,
+            label='Efficiency vertical')
+
+ax2.scatter(data['Reference Cell Vertical West (W.m-2)'][time_index_t],  
+            data['Efficiency INV-2-VBF'][time_index_t],  
+            color=color_v,
+            label='Efficiency tilted')
+
+ax2.set_ylabel('Efficiency')
+ax2.set_xlabel('Front Plan of Array (POA) irradiance')
+ax2.grid('--')
+ax2.set_ylim([0.16, 0.21])
+ax2.legend(fontsize=22, loc='lower right') #, bbox_to_anchor=(1.4, 0.4))
+
+plt.savefig('Figures/figure_paper.jpg', 
+                dpi=100, bbox_inches='tight')
