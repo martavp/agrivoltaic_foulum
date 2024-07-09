@@ -602,12 +602,12 @@ data['Efficiency INV-2-VBF'] = (1000/area)* data['INV-2-VBF Total input power (k
 ax2.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_t],  
             data['Efficiency INV-1-TBF'][time_index_t],  
             color=color_t,
-            label='Efficiency vertical')
+            label='Efficiency tilted')
 
 ax2.scatter(data['Reference Cell Vertical West (W.m-2)'][time_index_t],  
             data['Efficiency INV-2-VBF'][time_index_t],  
             color=color_v,
-            label='Efficiency tilted')
+            label='Efficiency vertical')
 
 ax2.set_ylabel('Efficiency')
 ax2.set_xlabel('Front Plan of Array (POA) irradiance')
