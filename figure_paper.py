@@ -6,6 +6,7 @@ from pvlib.bifacial.pvfactors import pvfactors_timeseries
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.dates as mdates
+import numpy as np
 import warnings
 # supressing shapely warnings that occur on import of pvfactors
 warnings.filterwarnings(action='ignore', module='pvfactors')
@@ -121,8 +122,8 @@ def calculate_irradiance_bifacial(tilt,
 plt.figure(figsize=(16, 12))
 gs1 = gridspec.GridSpec(2, 2)
 gs1.update(wspace=0.21, hspace=0.25)
-ax0 = plt.subplot(gs1[0,0]) # daily generation
-ax1 = plt.subplot(gs1[0,1]) # monthly generation
+ax0 = plt.subplot(gs1[0,1]) # daily generation
+ax1 = plt.subplot(gs1[0,0]) # monthly generation
 ax2 = plt.subplot(gs1[1,0]) # daily generation per string
 ax3 = plt.subplot(gs1[1,1])
 color_t='dodgerblue'
@@ -150,13 +151,13 @@ time_index = pd.date_range(start=day,
                            freq='5min',
                            tz=tz)
 #power generation inverter   
-ax0.plot(data['INV-1-TBF Total input power (kW)'][time_index], 
-              color=color_t,
-              label='tilted measured power')
-
 ax0.plot(data['INV-2-VBF Total input power (kW)'][time_index], 
               color=color_v,
               label='vertical measured power')
+
+ax0.plot(data['INV-1-TBF Total input power (kW)'][time_index], 
+              color=color_t,
+              label='tilted measured power')
 
 ax0.set_ylim([0,40])
 ax0.set_ylabel('DC Power (kW)')
@@ -164,11 +165,11 @@ ax0.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 ax0.set_xlim([time_index[24], time_index[264]])
 plt.setp(ax0.get_xticklabels(), ha="right", rotation=45)
 ax0.grid('--')
-ax0.text(0.05, 0.95, 'a)', 
-         fontsize=22,
-         horizontalalignment='center',
-         verticalalignment='center', 
-         transform=ax0.transAxes)
+ax0.text(0.05, 0.95, 'b)', 
+          fontsize=22,
+          horizontalalignment='center',
+          verticalalignment='center', 
+        transform=ax0.transAxes)
 
 
 """
@@ -179,9 +180,12 @@ ax0.text(0.05, 0.95, 'a)',
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 """
 
-
-dc_energy_t_m = data['INV-1-TBF Total input power (kW)'].groupby(data['INV-1-TBF Total input power (kW)'].index.month).sum().reset_index()
-dc_energy_v_m =data['INV-2-VBF Total input power (kW)'].groupby(data['INV-1-TBF Total input power (kW)'].index.month).sum().reset_index()
+time_index_m = pd.date_range(start=day, 
+                             periods=24*12*365, 
+                             freq='5min',
+                             tz=tz)
+dc_energy_t_m = data['INV-1-TBF Total input power (kW)'][time_index_m].groupby(data['INV-1-TBF Total input power (kW)'][time_index_m].index.month).sum().reset_index()
+dc_energy_v_m =data['INV-2-VBF Total input power (kW)'][time_index_m].groupby(data['INV-1-TBF Total input power (kW)'][time_index_m].index.month).sum().reset_index()
 
 ax1.bar(dc_energy_t_m['index']-0.1,
         (1/1000)*(1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'], #5 minutes resolution, kW -> MW  
@@ -196,7 +200,8 @@ ax1.bar(dc_energy_v_m['index']+0.3,
         label='vertical measured')
 ax1.yaxis.grid('--')
 ax1.set_ylim([0,9])
-ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
+
+#ax1.legend(fontsize=22, bbox_to_anchor=(0.1, 1.1))
 
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -211,7 +216,7 @@ DEFINE PARAMETERS FROM PILOT PLANT
 sandia_modules = pvlib.pvsystem.retrieve_sam('SandiaMod') 
 module = sandia_modules['LG_LG290N1C_G3__2013_'] # module LG290N1C
 
-# We eefine a new module based on Jolywood datasheet
+# We define a new module based on Jolywood datasheet
 Jolywood = module.copy() 
 Jolywood['Vintage'] = 2023 
 Jolywood['Area'] = 2.585      
@@ -228,6 +233,10 @@ Jolywood['Bvoco'] = - 0.0026 * Jolywood['Voco']
 Jolywood['Bvmpo'] =  - 0.0026 * Jolywood['Voco']           
 Jolywood.name = "Jolywood_HD144N" 
 module= Jolywood
+
+P=Jolywood['Impo']*Jolywood['Vmpo'] #moduleo nominal capacity
+module_length = 2.28
+module_width = 1.1
 
 bifaciality = 0.8
 
@@ -247,16 +256,18 @@ albedo = 0.2
 # vertical installation
 tilt_v = 90
 orientation_v = -84
-pvrow_height_v = 2.868
-pvrow_width_v = 2.57
-gcr_v=0.206
+pvrow_height_v = module_width + 0.2 + 0.1 #20 cm from the ground, 20 cm gap in the middle
+pvrow_width_v = module_width*2 + 0.2 + 0.2 #20 cm from the ground, 20 cm gap in the middle
+pitch_v = 11
+gcr_v=module_width*2/pitch_v
 
 # tilted installation
 tilt_t = 25
 orientation_t = 184
-pvrow_height_t = 1.264
-pvrow_width_t = 4.56
-gcr_t=0.38
+pvrow_height_t=module_length/2*np.sin(25/180*np.pi) + 0.8 #80cm from the ground to the lowest point of the panel
+pvrow_width_t = module_length
+pitch_t = 12 
+gcr_t=module_length/pitch_t
 
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -303,17 +314,17 @@ am_abs = pvlib.atmosphere.get_absolute_airmass(airmass, pressure)
 
 # vertical installation
 effective_irrad_bifi_v=calculate_irradiance_bifacial(tilt_v , 
-                                                      orientation_v, 
-                                                      bifaciality,
-                                                      time_index,
-                                                      dni,
-                                                      dhi,
-                                                      solar_azimuth,
-                                                      solar_zenith,
-                                                      pvrow_height_v, 
-                                                      pvrow_width_v, 
-                                                      albedo, 
-                                                      gcr_v)
+                                                     orientation_v, 
+                                                     bifaciality,
+                                                     time_index,
+                                                     dni,
+                                                     dhi,
+                                                     solar_azimuth,
+                                                     solar_zenith,
+                                                     pvrow_height_v, 
+                                                     pvrow_width_v, 
+                                                     albedo, 
+                                                     gcr_v)
 
 # effective_irrad_bifi_v= calculate_irradiance_poa_bifacial(tilt_v,
 #                                                           orientation_v,
@@ -335,21 +346,21 @@ dc_power_v = factor*pvlib.pvsystem.sapm(effective_irrad_bifi_v,
 ax0.plot(dc_power_v['p_mp'], 
          color='orange',
          linestyle='--',
-         label='tilted modeled power')
+         label='vertical modeled power')
 
 # tilted installation
 effective_irrad_bifi_t=calculate_irradiance_bifacial(tilt_t, 
-                                                      orientation_t,
-                                                      bifaciality,
-                                                      time_index,
-                                                      dni,
-                                                      dhi,
-                                                      solar_azimuth,
-                                                      solar_zenith,
-                                                      pvrow_height_t, 
-                                                      pvrow_width_t, 
-                                                      albedo, 
-                                                      gcr_t)
+                                                     orientation_t,
+                                                     bifaciality,
+                                                     time_index,
+                                                     dni,
+                                                     dhi,
+                                                     solar_azimuth,
+                                                     solar_zenith,
+                                                     pvrow_height_t, 
+                                                     pvrow_width_t, 
+                                                     albedo, 
+                                                     gcr_t)
 # effective_irrad_bifi_t= calculate_irradiance_poa_bifacial(tilt_t,
 #                                                           orientation_t,
 #                                                           bifaciality,                                     
@@ -367,12 +378,12 @@ cell_temperature_t = pvlib.temperature.sapm_cell(effective_irrad_bifi_t,
 dc_power_t = factor*pvlib.pvsystem.sapm(effective_irrad_bifi_t, 
                                          cell_temperature_t, 
                                          module)
-ax0 = plt.subplot(gs1[0,0])
+
 ax0.plot(dc_power_t['p_mp'], 
          color='dodgerblue',
          linestyle='--',
-         label='vertical modeled power')
-
+         label='tilted modeled power')
+ax0.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 #%%
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -475,12 +486,12 @@ ax1.set_xticks(dc_power_v_m['time(UTC)'])
 ax1.set_xticklabels(['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'])
 ax1.set_ylabel('DC energy (MWh)')
 
-ax1.text(0.05, 0.95, 'b)', 
-         fontsize=22,
-         horizontalalignment='center',
-         verticalalignment='center', 
-         transform=ax1.transAxes)
-ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
+ax1.text(0.05, 0.95, 'a)', 
+          fontsize=22,
+          horizontalalignment='center',
+          verticalalignment='center', 
+          transform=ax1.transAxes)
+#ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 #sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
 #inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208__208V_'] # inverter ABB-MICRO-0.25
 
