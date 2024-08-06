@@ -256,8 +256,8 @@ albedo = 0.2
 # vertical installation
 tilt_v = 90
 orientation_v = -84
-pvrow_height_v = module_width + 0.2 + 0.1 #20 cm from the ground, 20 cm gap in the middle
-pvrow_width_v = module_width*2 + 0.2 + 0.2 #20 cm from the ground, 20 cm gap in the middle
+pvrow_height_v = module_width + 0.5 + 0.1 #50 cm from the ground, 20 cm gap in the middle
+pvrow_width_v = module_width*2 + 0.5 + 0.2 #50 cm from the ground, 20 cm gap in the middle
 pitch_v = 11
 gcr_v=module_width*2/pitch_v
 
