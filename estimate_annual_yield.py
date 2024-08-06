@@ -129,7 +129,7 @@ gcr_t=module_length/pitch_t
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-3. PVLIB MODEL  - MONTHLY VALUES
+PVLIB MODEL  - ANNUAL YIELD CALCULATION
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 """
