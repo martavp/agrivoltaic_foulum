@@ -237,7 +237,7 @@ def pitch2gcr(x):
 
 ax10 = ax1.secondary_xaxis('top', functions=(gcr2pitch, pitch2gcr))
 ax10.set_xlabel('inter-row distance (m)')
-plt.show()
+#plt.show()
 
 plt.savefig('Figures/annual_yield_vs_GCR.jpg', 
                 dpi=100, bbox_inches='tight')
