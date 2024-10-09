@@ -143,7 +143,7 @@ tmy.index = tmy.index.tz_convert(tz) # use local time
 solar_position = location.get_solarposition(times=tmy.index)
 solar_zenith = solar_position['apparent_zenith']
 solar_azimuth = solar_position['azimuth']
-gcrs = np.arange(0.2,0.65,0.05)
+gcrs = np.arange(0.15,0.65,0.05)
 yield_v = pd.Series(index=gcrs, dtype='float64')
 
 # vertical installation
@@ -205,27 +205,29 @@ for gcr_t in gcrs:
 
 
 #%%
-plt.figure(figsize=(16, 12))
+plt.figure(figsize=(24, 18))
 gs1 = gridspec.GridSpec(2, 2)
-gs1.update(wspace=0.21, hspace=0.25)
+gs1.update(wspace=0.2, hspace=0.35)
 ax1 = plt.subplot(gs1[0,0]) 
 color_t='dodgerblue'
 color_v='darkorange'
 system_losses=0.16
 
-ax1.plot(yield_v*(1-system_losses),
+ax1.plot([module_width*2/x for x in yield_v.index],
+         yield_v.values*(1-system_losses),
          color=color_v,
-         label='vertical model (TMY)')
+         label='vertical, model (TMY)')
 
-ax1.plot(yield_t*(1-system_losses),
+ax1.plot([module_width*2/x for x in yield_t.index],
+         yield_t.values*(1-system_losses),
          color=color_t,
-         label='tilted model (TMY)')
+         label='south-oriented, model (TMY)')
 
 ax1.grid()
-ax1.axvline(x=0.2,color='grey', linewidth=3, linestyle='--')
-ax1.set_ylabel('Energy yield (kWh/kW)')
-ax1.set_xlabel('ground cover ratio (GCR)')
-ax1.legend()
+ax1.axvline(x=11,color='grey', linewidth=3, linestyle='--')
+ax1.set_ylabel('Annual electricity generation (kWh/kW)')
+ax1.set_xlabel('inter-row distance (m)')
+ax1.legend(fontsize=18)
 
 def gcr2pitch(x):
     return module_width*2/x
@@ -235,9 +237,30 @@ def pitch2gcr(x):
     return module_width*2/x
 
 
-ax10 = ax1.secondary_xaxis('top', functions=(gcr2pitch, pitch2gcr))
-ax10.set_xlabel('inter-row distance (m)')
-#plt.show()
+ax10 = ax1.secondary_xaxis('top', functions=(pitch2gcr, gcr2pitch))
+ax10.set_xlabel('ground cover ratio (GCR)')
+
+ax1 = plt.subplot(gs1[1,0]) 
+
+ax1.plot([module_width*2/x for x in yield_v.index],
+         100*(1-yield_v.values/yield_v.values[0]),
+         color=color_v,
+         label='vertical, model (TMY)')
+
+ax1.plot([module_width*2/x for x in yield_t.index],
+         100*(1-yield_t.values/yield_t.values[0]),
+         color=color_t,
+         label='south-oriented, model (TMY)')
+
+ax1.grid()
+ax1.axvline(x=11,color='grey', linewidth=3, linestyle='--')
+ax1.set_ylabel('Shadow losses (%)')
+ax1.set_xlabel('inter-row distance (m)')
+ax1.legend(fontsize=18)
+ax1.set_ylim([0,25])
+
+ax10 = ax1.secondary_xaxis('top', functions=(pitch2gcr, gcr2pitch))
+ax10.set_xlabel('ground cover ratio (GCR)')
 
 plt.savefig('Figures/annual_yield_vs_GCR.jpg', 
                 dpi=100, bbox_inches='tight')
