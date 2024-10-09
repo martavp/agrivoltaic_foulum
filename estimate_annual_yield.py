@@ -227,7 +227,7 @@ ax1.grid()
 ax1.axvline(x=11,color='grey', linewidth=3, linestyle='--')
 ax1.set_ylabel('Annual electricity generation (kWh/kW)')
 ax1.set_xlabel('inter-row distance (m)')
-ax1.legend(fontsize=18)
+ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.9))
 
 def gcr2pitch(x):
     return module_width*2/x
@@ -256,7 +256,7 @@ ax1.grid()
 ax1.axvline(x=11,color='grey', linewidth=3, linestyle='--')
 ax1.set_ylabel('Shadow losses (%)')
 ax1.set_xlabel('inter-row distance (m)')
-ax1.legend(fontsize=18)
+ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.9))
 ax1.set_ylim([0,25])
 
 ax10 = ax1.secondary_xaxis('top', functions=(pitch2gcr, gcr2pitch))
