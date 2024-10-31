@@ -164,7 +164,7 @@ ax5.grid('--')
 ax5.set_ylim([0.15, 0.20])
 ax5.legend(fontsize=14, bbox_to_anchor=(1.4, 0.4))
 
-plt.savefig('Figures/Efficiency_analysis_{}.jpg'.format(date), dpi=300, bbox_inches='tight')
+plt.savefig('Figures/efficiency_analysis/Efficiency_analysis_{}.jpg'.format(date), dpi=300, bbox_inches='tight')
 
 #%%
 plt.figure(figsize=(6, 6))
@@ -188,4 +188,4 @@ for i in range(1,5):
 ax0.set_ylabel('voltage (V)')
 ax0.set_xlabel('current (A)')
 ax0.legend(fontsize=14, bbox_to_anchor=(1.4, 0.4))
-plt.savefig('Figures/voltage_current_{}.jpg'.format(date), dpi=300, bbox_inches='tight')
+plt.savefig('Figures/efficiency_analysis/voltage_current_{}.jpg'.format(date), dpi=300, bbox_inches='tight')
