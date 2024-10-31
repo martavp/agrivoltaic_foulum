@@ -8,7 +8,7 @@ Calculate efficiency for both systems
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec 
-date ='2023-05-12 '
+date ='2024-09-19 '
 start_date = date +'00:00:00' #day to be ploted
 tz = 'UCT' 
 start_t = date + '05:30:00' 
@@ -142,11 +142,11 @@ time_index_v = pd.date_range(start=start_v,
                                freq='5min',  
                                tz=tz)
 
-ax5.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_t],  
-            data['Efficiency INV-1-TBF'][time_index_t],  
-            color=color_t,
-            marker='s',
-            label='Efficiency INV-1-TBF')
+# ax5.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_t],  
+#             data['Efficiency INV-1-TBF'][time_index_t],  
+#             color=color_t,
+#             marker='s',
+#             label='Efficiency INV-1-TBF')
 
 ax5.scatter(data['Reference Cell Tilted facing up (W.m-2)'][time_index_t2],  
             data['Efficiency INV-1-TBF'][time_index_t2],  
