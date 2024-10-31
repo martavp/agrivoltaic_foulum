@@ -10,7 +10,7 @@ import numpy as np
 import warnings
 # supressing shapely warnings that occur on import of pvfactors
 warnings.filterwarnings(action='ignore', module='pvfactors')
-plt.style.use(['seaborn-ticks','pv-textbook.mplstyle'])
+plt.style.use(['seaborn-ticks','pv-textbook.mplstyle']) 
 
 
 def calculate_irradiance_bifacial(tilt, 
@@ -29,14 +29,15 @@ def calculate_irradiance_bifacial(tilt,
     Calculate irradiance and effective irradiance on both planes of array (POA)
     using measured weather data or TMY and the pvfactors engine for both front  
     and rear-side effective irradiance
-
     """
+    
     surface_azimuth = orientation
     surface_tilt = tilt
     axis_azimuth = orientation+90
     # axis_azimuth (float) – Azimuth angle of the rotation axis of the PV modules, 
     # using pvlib’s convention (deg). This is supposed to be fixed for all timestamps.
-    # When modeling fixed-tilt arrays, set this value to be 90 degrees clockwise from surface_azimuth.
+    # When modeling fixed-tilt arrays, set this value to be 90 degrees clockwise 
+    # from surface_azimuth.
         
     irrad = pvfactors_timeseries(solar_azimuth,
                                  solar_zenith,
@@ -60,63 +61,6 @@ def calculate_irradiance_bifacial(tilt,
     effective_irrad_bifi = irrad['total_abs_front'] + (irrad['total_abs_back']
                                                        * bifaciality)
     return effective_irrad_bifi
-
-
-# def calculate_irradiance_poa_bifacial(tilt,
-#                                       orientation,
-#                                       bifaciality,                                     
-#                                       dni,
-#                                       ghi,
-#                                       dhi,
-#                                       solar_zenith,
-#                                       solar_azimuth,):
-#     """
-#     Calculate irradiance and effective irradiance on both planes of array (POA)
-#     using measured weather data or TMY (without considering view factors) for both front  
-#     and rear-side effective irradiance
-#     """
-#     surface_azimuth = orientation
-#     surface_tilt = tilt
-#     poa_irradiance = pvlib.irradiance.get_total_irradiance(surface_tilt,
-#                                                            surface_azimuth,
-#                                                            dni,
-#                                                            ghi,
-#                                                            dhi,
-#                                                            solar_zenith,
-#                                                            solar_azimuth)
-    
-#     #calculate the angle of incidence (aoi)
-#     aoi = pvlib.irradiance.aoi(surface_tilt=surface_tilt,
-#                                surface_azimuth=surface_azimuth,                              
-#                                solar_zenith=solar_zenith,
-#                                solar_azimuth=solar_azimuth)
-
-#     effective_irradiance_front = pvlib.pvsystem.sapm_effective_irradiance(poa_irradiance['poa_direct'],
-#                                                                           poa_irradiance['poa_diffuse'],
-#                                                                           am_abs,
-#                                                                           aoi,
-#                                                                           module)
-#     poa_irradiance_back = pvlib.irradiance.get_total_irradiance(surface_tilt+180,
-#                                                            surface_azimuth,
-#                                                            dni,
-#                                                            ghi,
-#                                                            dhi,
-#                                                            solar_zenith,
-#                                                            solar_azimuth)
-    
-#     #calculate the angle of incidence (aoi)
-#     aoi_back = pvlib.irradiance.aoi(surface_tilt=surface_tilt+180,
-#                                surface_azimuth=surface_azimuth,                              
-#                                solar_zenith=solar_zenith,
-#                                solar_azimuth=solar_azimuth)
-
-#     effective_irradiance_back = pvlib.pvsystem.sapm_effective_irradiance(poa_irradiance_back['poa_direct'],
-#                                                                          poa_irradiance_back['poa_diffuse'],
-#                                                                          am_abs,
-#                                                                          aoi_back,
-#                                                                          module)
-#     effective_irradiance = effective_irradiance_front + bifaciality*effective_irradiance_back
-#     return effective_irradiance
 
 
 plt.figure(figsize=(16, 12))
@@ -169,7 +113,7 @@ ax0.text(0.05, 0.95, 'b)',
           fontsize=22,
           horizontalalignment='center',
           verticalalignment='center', 
-        transform=ax0.transAxes)
+          transform=ax0.transAxes)
 
 
 """
@@ -201,7 +145,6 @@ ax1.bar(dc_energy_v_m['index']+0.3,
 ax1.yaxis.grid('--')
 ax1.set_ylim([0,9])
 
-#ax1.legend(fontsize=22, bbox_to_anchor=(0.1, 1.1))
 
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -223,10 +166,10 @@ Jolywood['Area'] = 2.585
 Jolywood['Material'] = 'monoSi'  
 Jolywood['Cells_in_Series'] =  144
 Jolywood['Parallel_Strings'] = 2
-Jolywood['Isco'] = 13.93 #11.23     
-Jolywood['Voco'] = 50.4 #48.2      
-Jolywood['Impo'] = 13.16 #10.61     
-Jolywood['Vmpo'] = 42.2 #39.6     
+Jolywood['Isco'] = 13.93     
+Jolywood['Voco'] = 50.4       
+Jolywood['Impo'] = 13.16     
+Jolywood['Vmpo'] = 42.2    
 Jolywood['Aisc'] = 0.00046                                                     
 Jolywood['Aimp'] = 0.00046                                              
 Jolywood['Bvoco'] = - 0.0026 * Jolywood['Voco']                                                       
@@ -256,8 +199,8 @@ albedo = 0.2
 # vertical installation
 tilt_v = 90
 orientation_v = -84
-pvrow_height_v = module_width + 0.5 + 0.1 #50 cm from the ground, 20 cm gap in the middle
-pvrow_width_v = module_width*2 + 0.5 + 0.2 #50 cm from the ground, 20 cm gap in the middle
+pvrow_height_v = module_width + 0.2 + 0.1 #50 cm from the ground, 20 cm gap in the middle
+pvrow_width_v = module_width*2 + 0.2 + 0.2 #50 cm from the ground, 20 cm gap in the middle
 pitch_v = 11
 gcr_v=module_width*2/pitch_v
 
@@ -287,8 +230,8 @@ ghi = data['GHI_SPN1 (W.m-2)'][time_index]
 dhi = data['DHI_SPN1 (W.m-2)'][time_index] 
 wind_speed = data['wind velocity (m.s-1)'][time_index]
 
-# use 2nd weather station since ambient temperature not properly measured in the first station
-# interpolate since only hourly data is available
+# use 2nd weather station since ambient temperature not properly measured in 
+# the first station, interpolate since only hourly data is available
 temp_air = data['Ambient Temperature_2nd station (Deg C)'][time_index].interpolate()
 
 solar_position = location.get_solarposition(times=time_index)
@@ -309,8 +252,7 @@ am_abs = pvlib.atmosphere.get_absolute_airmass(airmass, pressure)
 
 
 # total effective irradiance can be estimated using pvfactors irradiance model
-# (function calculate_irradiance_bifacial) or just calculate irradiance on front
-# and back plane of array and adding both irradiances
+# (function calculate_irradiance_bifacial)
 
 # vertical installation
 effective_irrad_bifi_v=calculate_irradiance_bifacial(tilt_v , 
@@ -325,15 +267,6 @@ effective_irrad_bifi_v=calculate_irradiance_bifacial(tilt_v ,
                                                      pvrow_width_v, 
                                                      albedo, 
                                                      gcr_v)
-
-# effective_irrad_bifi_v= calculate_irradiance_poa_bifacial(tilt_v,
-#                                                           orientation_v,
-#                                                           bifaciality,                                     
-#                                                           dni,
-#                                                           ghi,
-#                                                           dhi,
-#                                                           solar_zenith,
-#                                                           solar_azimuth,)
 
 cell_temperature_v = pvlib.temperature.sapm_cell(effective_irrad_bifi_v,
                                                  temp_air,
@@ -361,14 +294,6 @@ effective_irrad_bifi_t=calculate_irradiance_bifacial(tilt_t,
                                                      pvrow_width_t, 
                                                      albedo, 
                                                      gcr_t)
-# effective_irrad_bifi_t= calculate_irradiance_poa_bifacial(tilt_t,
-#                                                           orientation_t,
-#                                                           bifaciality,                                     
-#                                                           dni,
-#                                                           ghi,
-#                                                           dhi,
-#                                                           solar_zenith,
-#                                                           solar_azimuth,)
 
 cell_temperature_t = pvlib.temperature.sapm_cell(effective_irrad_bifi_t,
                                                     temp_air,
@@ -384,6 +309,7 @@ ax0.plot(dc_power_t['p_mp'],
          linestyle='--',
          label='tilted modeled power')
 ax0.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
+
 #%%
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -418,15 +344,6 @@ effective_irrad_bifi_v=calculate_irradiance_bifacial(tilt_v ,
                                                       albedo, 
                                                       gcr_v)
 
-# effective_irrad_bifi_v= calculate_irradiance_poa_bifacial(tilt_v,
-#                                                           orientation_v,
-#                                                           bifaciality,                                     
-#                                                           tmy['dni'],
-#                                                           tmy['ghi'],
-#                                                           tmy['dhi'],
-#                                                           solar_zenith,
-#                                                           solar_azimuth,)
-
 cell_temperature_v = pvlib.temperature.sapm_cell(effective_irrad_bifi_v,
                                                  tmy["temp_air"],
                                                  tmy["wind_speed"],
@@ -449,14 +366,6 @@ effective_irrad_bifi_t=calculate_irradiance_bifacial(tilt_t ,
                                                       albedo, 
                                                       gcr_t)
 
-# effective_irrad_bifi_t= calculate_irradiance_poa_bifacial(tilt_t,
-#                                                           orientation_t,
-#                                                           bifaciality,                                     
-#                                                           tmy['dni'],
-#                                                           tmy['ghi'],
-#                                                           tmy['dhi'],
-#                                                           solar_zenith,
-#                                                           solar_azimuth,)
 
 cell_temperature_t = pvlib.temperature.sapm_cell(effective_irrad_bifi_t,
                                                  tmy["temp_air"],
@@ -469,14 +378,19 @@ dc_power_t = pvlib.pvsystem.sapm(effective_irrad_bifi_t,
 dc_power_v_m = dc_power_v['p_mp'].groupby(dc_power_v['p_mp'].index.month).sum().reset_index()
 dc_power_t_m = dc_power_t['p_mp'].groupby(dc_power_t['p_mp'].index.month).sum().reset_index()
 
+### print("****** historial production tilted installation")
+### print(0.001*factor*dc_power_t_m['p_mp'].sum()/44.4)
+### print((1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'].sum()/44.4)
+
+system_losses=0.16
 ax1.bar(dc_power_t_m['time(UTC)']-0.3,
-        0.001*factor*dc_power_t_m['p_mp'], #kW to MW
+        0.001*(1-system_losses)*factor*dc_power_t_m['p_mp'], #kW to MW
         width=0.2,
         color='white',
         edgecolor=color_t, 
         label='tilted model (TMY)')
-ax1.bar(dc_power_t_m.index+0.1,
-        0.001*factor*dc_power_v_m['p_mp'],
+ax1.bar(dc_power_v_m['time(UTC)']+0.1,
+        0.001*(1-system_losses)*factor*dc_power_v_m['p_mp'],
         width=0.2,
         color='white',
         edgecolor=color_v, 
@@ -491,9 +405,6 @@ ax1.text(0.05, 0.95, 'a)',
           horizontalalignment='center',
           verticalalignment='center', 
           transform=ax1.transAxes)
-#ax1.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
-#sapm_inverters = pvlib.pvsystem.retrieve_sam('cecinverter')
-#inverter = sapm_inverters['ABB__MICRO_0_25_I_OUTD_US_208__208V_'] # inverter ABB-MICRO-0.25
 
 
 """
@@ -532,11 +443,14 @@ ax01.fill_between(time_index_day,
 ax01.plot(time_index_day, 
                   dem_day_mean, 
                   color='dimgray',
-                  alpha=0.7)
+                  alpha=0.7,
+                  label='electricity demand')
 ax01.set_ylim([2500,6000])
 ax01.set_yticks([])
 ax0.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
-
+ax0.set_xlim([time_index[24], time_index[264]])
+ax0.set_xticklabels([str(time_index[i].hour)+':00' for i in [24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264]])
+ax01.legend(fontsize=22, bbox_to_anchor=(1.01, 0.6))
 
 """
 
@@ -559,6 +473,7 @@ ax3.set_xlim(time_index[0], time_index[-1])
 ax3.set_ylabel('DC Power (kW)')
 ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 ax3.set_xlim([time_index[24], time_index[264]])
+ax3.set_xticklabels([str(time_index[i].hour)+':00' for i in [24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264]])
 plt.setp(ax3.get_xticklabels(), ha="right", rotation=45)
 ax3.grid('--')
 ax3.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))

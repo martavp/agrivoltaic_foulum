@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jan  9 14:49:09 2024
-
-@author: marta.victoria.perez
+Create a daily plot with electricity generation and 
+solar irradiance measurements
 """
 
 import pandas as pd
@@ -15,7 +14,7 @@ data=pd.read_csv('resources/clean_data.csv',
 data.index = pd.to_datetime(data.index, utc=True) 
 
 start_date = '2023-05-01 00:00:00'
-end_date =  '2024-06-30 00:00:00'
+end_date =  '2024-10-30 00:00:00'
 tz='UTC' 
 time_index_day = pd.date_range(start=start_date, 
                                   end=end_date, 
@@ -39,8 +38,8 @@ for day in time_index_day:
     colors = ['black', 'firebrick']
 
 
-    sources = [ 'INV-1-TBF Total input power (kW)',
-              'INV-2-VBF Total input power (kW)']
+    sources = ['INV-1-TBF Total input power (kW)',
+               'INV-2-VBF Total input power (kW)']
 
     sources_r = ['GHI (W.m-2)',
                  'Reference Cell Tilted facing up (W.m-2)',

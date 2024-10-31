@@ -2,7 +2,7 @@
 
 """
 This script retrieves raw data files from the weather stations and the 
-nverters datalogger, creates a data file named 'clean_data.csv' and 
+inverters datalogger, creates a data file named 'clean_data.csv' and 
 stores it in the folder 'resources'.
 """
 
@@ -71,9 +71,6 @@ def retrieve_inverter(data_path, clean_dataframe, start_date, end_date, tz):
     
 
 
-
-
-
 def retrieve_weather_station(fn, clean_dataframe, dic_columns, start_date, end_date, tz):  
 
     """
@@ -110,9 +107,6 @@ def retrieve_weather_station(fn, clean_dataframe, dic_columns, start_date, end_d
 
 
 
-
-
-
 def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, end_date, tz):  
 
     """
@@ -146,22 +140,22 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 
 
 
-
-
 # Create empty dataframe to be populated
 tz = 'UTC' 
 start_date = '2022-12-01 00:00:00'
-end_date = '2024-07-01 23:55:00'
+end_date = '2024-11-01 23:55:00'
 time_index = pd.date_range(start=start_date, 
                                end=end_date, 
                                freq='5min',  
                                tz=tz)
+
 clean_data=pd.DataFrame(index=time_index)   
 
 time_index_hour = pd.date_range(start=start_date, 
                                 end=end_date, 
                                 freq='H',  
                                 tz=tz)
+
 #retrieve data from inverters, dateindex in CET/CEST (indicated by DST)
 data_path='data/inverter_monthly_datafiles/'
 clean_data = retrieve_inverter(data_path, 
@@ -214,7 +208,6 @@ time_index_tbc = pd.date_range(start='2023-06-15 00:00:00',
                                 tz=tz)
 clean_data['Reference Cell Tilted facing up (W.m-2)'][time_index_tbc]=np.nan
 
-
 # reference cell in vertical setup were not properly working (broken wire)
 # from 14/08/2023 to 07/09/2023 
 time_index_tbc = pd.date_range(start='2023-08-14 00:00:00', 
@@ -225,8 +218,8 @@ clean_data['Reference Cell Vertical East (W.m-2)'][time_index_tbc]=np.nan
 clean_data['Reference Cell Vertical West (W.m-2)'][time_index_tbc]=np.nan
 
 
-#when vertical reference cells were connected on 2023/09/07 the input where
-#swapt between vertical and tilted
+# when vertical reference cells were connected on 2023/09/07 the input
+# were swapt between vertical and tilted
 time_index_tbc = pd.date_range(start='2023-09-07 00:00:00', 
                                 end=end_date, 
                                 freq='5min',  
@@ -294,7 +287,8 @@ dic_columns = {'GHI_2nd station (W.m-2)':'glorad',
             
                }
 
-fn = 'data/weather_station_6069/522945015.csv'
+fn = 'data/weather_station_6069/557669425.csv'
+
 clean_data = retrieve_weather_station6069(fn, 
                                           clean_data, 
                                           dic_columns, 
