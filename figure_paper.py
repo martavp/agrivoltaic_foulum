@@ -131,6 +131,10 @@ time_index_m = pd.date_range(start=day,
 dc_energy_t_m = data['INV-1-TBF Total input power (kW)'][time_index_m].groupby(data['INV-1-TBF Total input power (kW)'][time_index_m].index.month).sum().reset_index()
 dc_energy_v_m =data['INV-2-VBF Total input power (kW)'][time_index_m].groupby(data['INV-1-TBF Total input power (kW)'][time_index_m].index.month).sum().reset_index()
 
+#estimate also annual GHI
+GHI_SPN1_m = data['GHI_SPN1 (W.m-2)'][time_index_m].groupby(data['GHI_SPN1 (W.m-2)'][time_index_m].index.month).sum().reset_index()
+GHI_m = data['GHI (W.m-2)'][time_index_m].groupby(data['GHI (W.m-2)'][time_index_m].index.month).sum().reset_index()
+
 ax1.bar(dc_energy_t_m['index']-0.1,
         (1/1000)*(1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'], #5 minutes resolution, kW -> MW  
         width=0.2,
@@ -378,11 +382,19 @@ dc_power_t = pvlib.pvsystem.sapm(effective_irrad_bifi_t,
 dc_power_v_m = dc_power_v['p_mp'].groupby(dc_power_v['p_mp'].index.month).sum().reset_index()
 dc_power_t_m = dc_power_t['p_mp'].groupby(dc_power_t['p_mp'].index.month).sum().reset_index()
 
-### print("****** historial production tilted installation")
-### print(0.001*factor*dc_power_t_m['p_mp'].sum()/44.4)
-### print((1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'].sum()/44.4)
-
 system_losses=0.16
+#%%
+print("****** modelled yield tilted installation")
+print(((1-system_losses)*factor*dc_power_t_m['p_mp'].sum()/44.4).round())
+print("****** historial yield tilted installation")
+print(((1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'].sum()/44.4).round())
+print("****** modelled annual GHI")
+print((tmy['ghi'].sum()/1000).round())
+print("****** historical annual GHI SPN1")
+print((0.001*1/12*GHI_SPN1_m['GHI_SPN1 (W.m-2)'].sum()).round())
+print("****** historical annual GHI")
+print((0.001*1/12*GHI_m['GHI (W.m-2)'].sum()).round())
+#%%
 ax1.bar(dc_power_t_m['time(UTC)']-0.3,
         0.001*(1-system_losses)*factor*dc_power_t_m['p_mp'], #kW to MW
         width=0.2,
