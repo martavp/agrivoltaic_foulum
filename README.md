@@ -3,7 +3,9 @@
 # Agrivoltaic systems Foulum
 
 
-This repository includes scripts to process, validate, and analyze the data collected at the Agrivoltaics demonstration site in Foulumgaard which is part of the [Hyperfarm project](https://hyperfarm.eu/).
+This repository includes scripts to process, validate, and analyze the data collected at the Agrivoltaic demonstration site in Foulumgaard which is part of the [Hyperfarm project](https://hyperfarm.eu/).
+
+The Agrivoltaic demonstration system is described in the pre-print ["Vertical Agrivoltaics in a Temperate Climate: Exploring Technical, Agricultural, Meteorological, and Social Dimensions"](https://www.researchsquare.com/article/rs-5358908/v1)
 
 The script 'clean_data.py' retrieves raw data files from the weather stations and the inverters datalogger, creates a data file named 'clean_data.csv' and stores it in the folder 'resources'. 
 
