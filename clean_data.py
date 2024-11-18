@@ -16,6 +16,7 @@ def retrieve_inverter(data_path, clean_dataframe, start_date, end_date, tz):
 
     """
     Retrieve inverters data (collected trough solar fussion)
+
     """
 
     #index to read the datafiles, one datafile per month, 
@@ -40,36 +41,52 @@ def retrieve_inverter(data_path, clean_dataframe, start_date, end_date, tz):
         #identify data for inverter 1 (tilted bifacial) and 2 (vertical bifacial)
         inv1=input_data[input_data['ManageObject']=='Logger-1/INV-1-TBF']
         inv2=input_data[input_data['ManageObject']=='Logger-1/INV-2-VBF']
+        
+        clean_data.loc[inv1.index,['TBF inverter status']] = inv1['Inverter status']
+        clean_data.loc[inv2.index,['VBF inverter status']] = inv2['Inverter status']
 
         clean_data.loc[inv1.index,['INV-1-TBF Total input power (kW)']] = inv1['Total input power(kW)']
         clean_data.loc[inv2.index,['INV-2-VBF Total input power (kW)']] = inv2['Total input power(kW)']
         clean_data.loc[inv1.index,['INV-1-TBF Active power (kW)']] = inv1['Active power(kW)']
         clean_data.loc[inv2.index,['INV-2-VBF Active power (kW)']] = inv2['Active power(kW)']
-
-        clean_data.loc[inv1.index,['TBF PV1 input current (A)']] = inv1['PV1 input current(A)']
-        clean_data.loc[inv1.index,['TBF PV2 input current (A)']] = inv1['PV2 input current(A)']
-        clean_data.loc[inv1.index,['TBF PV3 input current (A)']] = inv1['PV3 input current(A)']
-        clean_data.loc[inv1.index,['TBF PV4 input current (A)']] = inv1['PV4 input current(A)']
+        
         clean_data.loc[inv2.index,['VBF PV1 input current (A)']] = inv2['PV1 input current(A)']
         clean_data.loc[inv2.index,['VBF PV2 input current (A)']] = inv2['PV2 input current(A)']
         clean_data.loc[inv2.index,['VBF PV3 input current (A)']] = inv2['PV3 input current(A)']
-        clean_data.loc[inv2.index,['VBF PV4 input current (A)']] = inv2['PV4 input current(A)']    
-        clean_data.loc[inv1.index,['TBF PV1 input voltage (V)']] = inv1['PV1 input voltage(V)']
-        clean_data.loc[inv1.index,['TBF PV2 input voltage (V)']] = inv1['PV2 input voltage(V)']
-        clean_data.loc[inv1.index,['TBF PV3 input voltage (V)']] = inv1['PV3 input voltage(V)']
-        clean_data.loc[inv1.index,['TBF PV4 input voltage (V)']] = inv1['PV4 input voltage(V)']    
+        clean_data.loc[inv2.index,['VBF PV4 input current (A)']] = inv2['PV4 input current(A)']  
+        
         clean_data.loc[inv2.index,['VBF PV1 input voltage (V)']] = inv2['PV1 input voltage(V)']
         clean_data.loc[inv2.index,['VBF PV2 input voltage (V)']] = inv2['PV2 input voltage(V)']
         clean_data.loc[inv2.index,['VBF PV3 input voltage (V)']] = inv2['PV3 input voltage(V)']
         clean_data.loc[inv2.index,['VBF PV4 input voltage (V)']] = inv2['PV4 input voltage(V)']
+
+        clean_data.loc[inv1.index,['TBF PV1 input current (A)']] = inv1['PV1 input current(A)']
+        clean_data.loc[inv1.index,['TBF PV3 input current (A)']] = inv1['PV3 input current(A)']
+        clean_data.loc[inv1.index,['TBF PV1 input voltage (V)']] = inv1['PV1 input voltage(V)']      
+        clean_data.loc[inv1.index,['TBF PV3 input voltage (V)']] = inv1['PV3 input voltage(V)']
+  
+        # string X and X connection to inverter 1 (tilted bifacial) was changed on 07/09/2024
         
-        clean_data.loc[inv1.index,['TBF inverter status']] = inv1['Inverter status']
-        clean_data.loc[inv2.index,['VBF inverter status']] = inv2['Inverter status']
+        if m < pd.to_datetime('2024-09-30 00:00:00+00:00'):
+            clean_data.loc[inv1.index,['TBF PV2 input current (A)']] = inv1['PV2 input current(A)']
+            clean_data.loc[inv1.index,['TBF PV4 input current (A)']] = inv1['PV4 input current(A)']
+            clean_data.loc[inv1.index,['TBF PV2 input voltage (V)']] = inv1['PV2 input voltage(V)']
+            clean_data.loc[inv1.index,['TBF PV4 input voltage (V)']] = inv1['PV4 input voltage(V)']  
+        
+        else:            
+            clean_data.loc[inv1.index,['TBF PV2 input current (A)']] = inv1['PV5 input current(A)']
+            clean_data.loc[inv1.index,['TBF PV4 input current (A)']] = inv1['PV7 input current(A)']
+            clean_data.loc[inv1.index,['TBF PV2 input voltage (V)']] = inv1['PV5 input voltage(V)']
+            clean_data.loc[inv1.index,['TBF PV4 input voltage (V)']] = inv1['PV7 input voltage(V)']  
+        
+
     
     clean_data.to_csv('resources/clean_data.csv')
     return clean_data
-    
 
+   
+
+   
 
 def retrieve_weather_station(fn, clean_dataframe, dic_columns, start_date, end_date, tz):  
 
