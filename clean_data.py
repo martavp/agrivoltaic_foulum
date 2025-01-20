@@ -160,7 +160,7 @@ def retrieve_weather_station6069(fn, clean_dataframe, dic_columns, start_date, e
 # Create empty dataframe to be populated
 tz = 'UTC' 
 start_date = '2022-12-01 00:00:00'
-end_date = '2024-11-01 23:55:00'
+end_date = '2025-01-19 23:55:00'
 time_index = pd.date_range(start=start_date, 
                                end=end_date, 
                                freq='5min',  
