@@ -95,16 +95,16 @@ time_index = pd.date_range(start=day,
                            freq='5min',
                            tz=tz)
 #power generation inverter   
-ax0.plot(data['INV-2-VBF Total input power (kW)'][time_index], 
+ax0.plot(data['INV-2-VBF Total input power (kW)'][time_index]*(1/44.4), 
               color=color_v,
               label='vertical measured power')
 
-ax0.plot(data['INV-1-TBF Total input power (kW)'][time_index], 
+ax0.plot(data['INV-1-TBF Total input power (kW)'][time_index]*(1/44.4), 
               color=color_t,
               label='tilted measured power')
 
-ax0.set_ylim([0,40])
-ax0.set_ylabel('DC Power (kW)')
+ax0.set_ylim([0,1])
+ax0.set_ylabel('DC Power (kW/kWp)')
 ax0.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 ax0.set_xlim([time_index[24], time_index[264]])
 plt.setp(ax0.get_xticklabels(), ha="right", rotation=45)
@@ -136,18 +136,18 @@ GHI_SPN1_m = data['GHI_SPN1 (W.m-2)'][time_index_m].groupby(data['GHI_SPN1 (W.m-
 GHI_m = data['GHI (W.m-2)'][time_index_m].groupby(data['GHI (W.m-2)'][time_index_m].index.month).sum().reset_index()
 
 ax1.bar(dc_energy_t_m['index']-0.1,
-        (1/1000)*(1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)'], #5 minutes resolution, kW -> MW  
+        (1/12)*dc_energy_t_m['INV-1-TBF Total input power (kW)']*(1/44.4), #5 minutes resolution, kW -> kWh/kWp  
         width=0.2,
         color=color_t,
         label='tilted measured')
 
 ax1.bar(dc_energy_v_m['index']+0.3,
-        (1/1000)*(1/12)*dc_energy_v_m['INV-2-VBF Total input power (kW)'], #5 minutes resolution, kW -> MW  
+        (1/12)*dc_energy_v_m['INV-2-VBF Total input power (kW)']*(1/44.4), #5 minutes resolution, kW -> kWh/kWp  
         width=0.2,
         color=color_v,
         label='vertical measured')
 ax1.yaxis.grid('--')
-ax1.set_ylim([0,9])
+ax1.set_ylim([0,200])
 
 
 """
@@ -280,7 +280,7 @@ cell_temperature_v = pvlib.temperature.sapm_cell(effective_irrad_bifi_v,
 dc_power_v = factor*pvlib.pvsystem.sapm(effective_irrad_bifi_v, 
                                          cell_temperature_v, 
                                          module)
-ax0.plot(dc_power_v['p_mp'], 
+ax0.plot(dc_power_v['p_mp']*(1/44.4), 
          color='orange',
          linestyle='--',
          label='vertical modeled power')
@@ -308,13 +308,13 @@ dc_power_t = factor*pvlib.pvsystem.sapm(effective_irrad_bifi_t,
                                          cell_temperature_t, 
                                          module)
 
-ax0.plot(dc_power_t['p_mp'], 
+ax0.plot(dc_power_t['p_mp']*(1/44.4), 
          color='dodgerblue',
          linestyle='--',
          label='tilted modeled power')
 ax0.legend(fontsize=22, bbox_to_anchor=(1.01, 0.5))
 
-#%%
+
 """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -383,7 +383,7 @@ dc_power_v_m = dc_power_v['p_mp'].groupby(dc_power_v['p_mp'].index.month).sum().
 dc_power_t_m = dc_power_t['p_mp'].groupby(dc_power_t['p_mp'].index.month).sum().reset_index()
 
 system_losses=0.16
-#%%
+
 print("****** modelled yield tilted installation")
 print(((1-system_losses)*factor*dc_power_t_m['p_mp'].sum()/44.4).round())
 print("****** historial yield tilted installation")
@@ -394,15 +394,15 @@ print("****** historical annual GHI SPN1")
 print((0.001*1/12*GHI_SPN1_m['GHI_SPN1 (W.m-2)'].sum()).round())
 print("****** historical annual GHI")
 print((0.001*1/12*GHI_m['GHI (W.m-2)'].sum()).round())
-#%%
+
 ax1.bar(dc_power_t_m['time(UTC)']-0.3,
-        0.001*(1-system_losses)*factor*dc_power_t_m['p_mp'], #kW to MW
+        (1-system_losses)*factor*dc_power_t_m['p_mp']*(1/44.4), #kW to MW (to MWh/kW)
         width=0.2,
         color='white',
         edgecolor=color_t, 
         label='tilted model (TMY)')
 ax1.bar(dc_power_v_m['time(UTC)']+0.1,
-        0.001*(1-system_losses)*factor*dc_power_v_m['p_mp'],
+        (1-system_losses)*factor*dc_power_v_m['p_mp']*(1/44.4),
         width=0.2,
         color='white',
         edgecolor=color_v, 
@@ -410,14 +410,17 @@ ax1.bar(dc_power_v_m['time(UTC)']+0.1,
 ax1.set_xticks(dc_power_v_m['time(UTC)'])
 
 ax1.set_xticklabels(['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'])
-ax1.set_ylabel('DC energy (MWh)')
+ax1.set_ylabel('DC energy (kWh/kWp)')
 
 ax1.text(0.05, 0.95, 'a)', 
           fontsize=22,
           horizontalalignment='center',
           verticalalignment='center', 
           transform=ax1.transAxes)
-
+ax1.annotate('vertical measured',  fontsize=20, xy=(5, 4.5), xytext=(7.5, 147), color=color_v)
+ax1.annotate('vertical modeled', fontsize=20, xy=(5, 4), xytext=(7.5, 135),  color=color_v)
+ax1.annotate('tilted measured',  fontsize=20, xy=(5, 6), xytext=(7.5, 180), color=color_t)
+ax1.annotate('tilted modeled', fontsize=20, xy=(5, 5.5), xytext=(7.5, 169),  color=color_t)
 
 """
 Add electricity demand in Denmark in 2019
@@ -475,14 +478,14 @@ Subfigure C: Power generation per string
 #power generation per string 
 colors=['firebrick', 'green', 'orange', 'gold']
 for i in ['1', '2', '3', '4']:
-    ax3.plot(0.001*data['VBF PV{} input voltage (V)'.format(i)][time_index]*data['VBF PV{} input current (A)'.format(i)][time_index], 
+    ax3.plot(0.001*data['VBF PV{} input voltage (V)'.format(i)][time_index]*data['VBF PV{} input current (A)'.format(i)][time_index]*(1/11.1), 
              color=colors[int(i)-1],
              alpha=0.8,
              label='vertical row {}'.format(i))
  
-ax3.set_ylim([0,10])
+ax3.set_ylim([0,0.9])
 ax3.set_xlim(time_index[0], time_index[-1])
-ax3.set_ylabel('DC Power (kW)')
+ax3.set_ylabel('DC Power (kW/kWp)')
 ax3.xaxis.set_major_formatter(mdates.DateFormatter('%H:%m'))
 ax3.set_xlim([time_index[24], time_index[264]])
 ax3.set_xticklabels([str(time_index[i].hour)+':00' for i in [24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264]])
