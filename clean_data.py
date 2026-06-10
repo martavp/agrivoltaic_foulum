@@ -211,6 +211,14 @@ clean_data = retrieve_weather_station(fn,
                                       end_date = '2023-08-25 23:55:00', 
                                       tz = 'UTC') 
 
+# #Data from weather station from 2026-01-30 to 2026-05-18 
+fn = 'data/weather_station_data/CR1000XSeries_Table2_20260518.dat'
+clean_data = retrieve_weather_station(fn, 
+                                      clean_data, 
+                                      dic_columns, 
+                                      start_date = '2026-01-30 18:50:00', 
+                                      end_date = '2026-05-18 13:05:00', 
+                                      tz = 'UTC') 
 
 # reference cell facing up were not properly working (broken wires)
 # from 18/05/2023 to 19/05/2023 and from 15/06/2023 to 06/09/2023 
@@ -283,6 +291,15 @@ clean_data = retrieve_weather_station(fn,
                                       dic_columns, 
                                       start_date = '2023-04-18 00:00:00', 
                                       end_date = '2023-08-25 23:55:00', 
+                                      tz = 'UTC') 
+
+#Retrieve weather station data - wind sensor from 2026-01-30 to 2026-05-18 
+fn = 'data/weather_station_data/CR1000XSeries_Table1_20260518.dat'
+clean_data = retrieve_weather_station(fn, 
+                                      clean_data, 
+                                      dic_columns, 
+                                      start_date = '2026-01-30 18:50:00', 
+                                      end_date = '2026-05-18 13:05:00', 
                                       tz = 'UTC') 
 
 # Before 06/09/2023 the wind sensor was incorrectly monted, on that date,
